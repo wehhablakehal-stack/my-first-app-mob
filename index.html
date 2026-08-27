@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/webstorm-icon-logo.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iPhone 17 Pro Max · Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="stage">
+  <div class="phone">
+    <div class="side-btn silent"></div>
+    <div class="side-btn volup"></div>
+    <div class="side-btn voldown"></div>
+    <div class="side-btn action"></div>
+    <div class="side-btn power"></div>
+
+    <div class="screen">
+      <!-- Dynamic Island -->
+      <div class="island"><span class="island-cam"></span></div>
+
+      <!-- Status bar -->
+      <div class="statusbar">
+        <span class="time" id="clock">9:41</span>
+        <span class="status-right">
+          <svg class="ic" viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg class="ic" viewBox="0 0 16 12" aria-hidden="true"><path d="M8 2.5C10.4 2.5 12.6 3.4 14.2 5l1.3-1.4C13.5 1.6 10.9.5 8 .5S2.5 1.6.5 3.6L1.8 5C3.4 3.4 5.6 2.5 8 2.5Z"/><path d="M8 6c1.3 0 2.5.5 3.4 1.4l1.3-1.4C11.5 4.7 9.8 4 8 4s-3.5.7-4.7 2l1.3 1.4C5.5 6.5 6.7 6 8 6Z"/><circle cx="8" cy="9.8" r="1.7"/></svg>
+          <span class="battery"><span class="battery-fill"></span></span>
+        </span>
+      </div>
+
+      <!-- ============ HOME SCREEN ============ -->
+      <main class="dashboard" id="home">
+        <div class="greeting">
+          <p class="hello">Good morning</p>
+          <h1 class="day" id="today">Wednesday</h1>
+        </div>
+
+        <div class="grid">
+          <!-- Counter widget (opens Counter app) -->
+          <section class="widget counter-widget" data-app="counter">
+            <div class="w-head">
+              <span class="w-icon counter-ic">#</span>
+              <span class="w-title">Counter</span>
+              <span class="chev">›</span>
+            </div>
+            <p class="counter-mirror" id="counter-mirror">0</p>
+            <p class="w-sub">Tap to open</p>
+          </section>
+
+          <section class="widget weather" data-app="weather">
+            <div class="w-head"><span class="w-title">Cupertino</span><span class="chev">›</span></div>
+            <p class="temp">72°</p>
+            <p class="w-sub">Sunny · H:75 L:60</p>
+          </section>
+
+          <section class="widget battery-widget" data-app="battery">
+            <div class="ring">
+              <svg viewBox="0 0 100 100">
+                <circle class="ring-bg" cx="50" cy="50" r="42"/>
+                <circle class="ring-fg" cx="50" cy="50" r="42"/>
+              </svg>
+              <span class="ring-label">87%</span>
+            </div>
+            <p class="w-sub">Battery</p>
+          </section>
+
+          <section class="widget activity" data-app="activity">
+            <div class="w-head"><span class="w-title">Activity</span><span class="chev">›</span></div>
+            <div class="rings"><span class="a-ring r1"></span><span class="a-ring r2"></span><span class="a-ring r3"></span></div>
+            <p class="w-sub">Move · Exercise · Stand</p>
+          </section>
+
+          <section class="widget photos-widget" data-app="photos">
+            <div class="w-head"><span class="w-title">Photos</span><span class="chev">›</span></div>
+            <div class="ph-mini">
+              <span class="ph p1"></span><span class="ph p2"></span><span class="ph p3"></span>
+              <span class="ph p4"></span><span class="ph p5"></span><span class="ph p6"></span>
+            </div>
+          </section>
+
+          <section class="widget camera-widget" data-app="camera">
+            <div class="cam-lens"><span class="cam-glint"></span></div>
+            <p class="w-sub">Camera</p>
+          </section>
+
+          <section class="widget files-widget" data-app="files">
+            <div class="w-head"><span class="w-icon files-ic">📁</span><span class="w-title">Files</span><span class="chev">›</span></div>
+            <p class="files-big">📂</p>
+            <p class="w-sub">Browse your PC</p>
+          </section>
+
+          <section class="widget settings-widget" data-app="settings">
+            <div class="w-head"><span class="w-icon settings-ic">⚙️</span><span class="w-title">Settings</span><span class="chev">›</span></div>
+            <p class="settings-big">⚙️</p>
+            <p class="w-sub">Wallpaper · Reset</p>
+          </section>
+
+          <section class="widget music" data-app="music">
+            <div class="art"></div>
+            <div class="track">
+              <p class="track-name">Titanium Dreams</p>
+              <p class="w-sub">Aurora</p>
+              <div class="bars"><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
+            <span class="play">▶</span>
+          </section>
+        </div>
+      </main>
+
+      <!-- ============ APP: COUNTER ============ -->
+      <section class="app-view" id="app-counter" data-accent="#0a84ff">
+        <header class="app-bar"><button class="back" data-back>‹ Home</button><h2>Counter</h2></header>
+        <div class="app-body counter-app">
+          <p class="counter-value" id="counter-value">0</p>
+          <p class="counter-caption">Current value</p>
+          <div class="counter-interaction">
+            <button id="decreaseByTwo" type="button">−2</button>
+            <button id="decreaseByOne" type="button">−1</button>
+            <button id="increaseByOne" type="button">+1</button>
+            <button id="increaseByTwo" type="button">+2</button>
+          </div>
+          <p class="hint">Values wrap around at ±100</p>
+        </div>
+      </section>
+
+      <!-- ============ APP: WEATHER ============ -->
+      <section class="app-view weather-app" id="app-weather" data-accent="#0a84ff">
+        <header class="app-bar"><button class="back" data-back>‹ Home</button><h2>Weather</h2></header>
+        <div class="app-body">
+          <div class="wx-hero">
+            <p class="wx-city">Cupertino</p>
+            <p class="wx-temp">72°</p>
+            <p class="wx-cond">Sunny</p>
+            <p class="wx-range">H:75°  L:60°</p>
+          </div>
+          <div class="wx-hours">
+            <div class="wx-hour"><span>Now</span><span class="wx-emoji">☀️</span><b>72°</b></div>
+            <div class="wx-hour"><span>10</span><span class="wx-emoji">☀️</span><b>74°</b></div>
+            <div class="wx-hour"><span>11</span><span class="wx-emoji">🌤️</span><b>75°</b></div>
+            <div class="wx-hour"><span>12</span><span class="wx-emoji">⛅</span><b>73°</b></div>
+            <div class="wx-hour"><span>1</span><span class="wx-emoji">🌤️</span><b>72°</b></div>
+            <div class="wx-hour"><span>2</span><span class="wx-emoji">☀️</span><b>71°</b></div>
+          </div>
+          <div class="wx-grid">
+            <div class="wx-tile"><span class="w-sub">UV INDEX</span><b>5 · Moderate</b></div>
+            <div class="wx-tile"><span class="w-sub">HUMIDITY</span><b>48%</b></div>
+            <div class="wx-tile"><span class="w-sub">WIND</span><b>6 mph</b></div>
+            <div class="wx-tile"><span class="w-sub">FEELS LIKE</span><b>73°</b></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ APP: BATTERY ============ -->
+      <section class="app-view" id="app-battery" data-accent="#30d158">
+        <header class="app-bar"><button class="back" data-back>‹ Home</button><h2>Battery</h2></header>
+        <div class="app-body battery-app">
+          <div class="ring big">
+            <svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="42"/><circle class="ring-fg green" cx="50" cy="50" r="42"/></svg>
+            <span class="ring-label">87%</span>
+          </div>
+          <p class="bat-status">Not charging · 6h 12m left</p>
+          <div class="bat-list">
+            <div class="bat-row"><span>Photos</span><span class="w-sub">32%</span></div>
+            <div class="bat-row"><span>Safari</span><span class="w-sub">21%</span></div>
+            <div class="bat-row"><span>Music</span><span class="w-sub">14%</span></div>
+            <div class="bat-row"><span>Maps</span><span class="w-sub">9%</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ APP: ACTIVITY ============ -->
+      <section class="app-view" id="app-activity" data-accent="#ff375f">
+        <header class="app-bar"><button class="back" data-back>‹ Home</button><h2>Activity</h2></header>
+        <div class="app-body activity-app">
+          <div class="rings huge"><span class="a-ring r1"></span><span class="a-ring r2"></span><span class="a-ring r3"></span></div>
+          <div class="act-stats">
+            <div class="act-row move"><span>Move</span><b>420 / 600 CAL</b></div>
+            <div class="act-row exercise"><span>Exercise</span><b>24 / 30 MIN</b></div>
+            <div class="act-row stand"><span>Stand</span><b>9 / 12 HR</b></div>
+          </div>
+          <p class="hint">Keep going — you're almost there!</p>
+        </div>
+      </section>
+
+      <!-- ============ APP: MUSIC ============ -->
+      <section class="app-view music-app" id="app-music" data-accent="#ff2d55">
+        <header class="app-bar"><button class="back" data-back>‹ Home</button><h2>Music</h2></header>
+        <div class="app-body">
+          <div class="np-art" id="npArt"></div>
+          <p class="np-title" id="npTitle">No track</p>
+          <p class="np-artist" id="npArtist">Add music from your PC</p>
+          <div class="np-progress" id="npProgress"><span id="npFill"></span></div>
+          <div class="np-times"><span id="npCur">0:00</span><span id="npDur">0:00</span></div>
+          <div class="np-controls"><span id="npPrev">⏮</span><span class="np-play" id="npPlay">▶</span><span id="npNext">⏭</span></div>
+          <div class="np-vol-row"><span class="np-vol-ic">🔈</span><input class="np-vol" id="npVol" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume"><span class="np-vol-ic">🔊</span></div>
+          <button class="np-add" id="npAdd" type="button">＋ Add Music…</button>
+          <button class="np-output" id="npOutput" type="button">🔊 Output: Default</button>
+          <input id="npFile" type="file" accept="audio/*" multiple hidden>
+          <ul class="np-list" id="npList"></ul>
+        </div>
+      </section>
+
+      <!-- ============ APP: PHOTOS ============ -->
+      <section class="app-view" id="app-photos" data-accent="#0a84ff">
+        <header class="app-bar"><button class="back" data-back>‹ Home</button><h2>Photos</h2></header>
+        <div class="app-body">
+          <p class="ph-count">128 Photos · 6 Albums</p>
+          <div class="ph-grid"></div>
+          <button class="ph-recent" type="button" style="display:none">Recently Deleted (<span class="ph-recent-n">0</span>) · tap a photo to restore</button>
+          <div class="ph-deleted"></div>
+        </div>
+      </section>
+
+      <!-- ============ APP: CAMERA ============ -->
+      <section class="app-view camera-app" id="app-camera" data-accent="#ffd60a">
+        <header class="app-bar"><button class="back" data-back>‹ Home</button><h2>Camera</h2></header>
+        <div class="app-body">
+          <div class="cam-view">
+            <video class="cam-feed" autoplay muted playsinline></video>
+            <span class="cam-frame tl"></span><span class="cam-frame tr"></span>
+            <span class="cam-frame bl"></span><span class="cam-frame br"></span>
+            <span class="cam-flash">⚡︎ Auto</span>
+            <span class="cam-rec"><i class="cam-rec-dot"></i><span class="cam-rec-time">0:00</span></span>
+            <p class="cam-denied">Camera unavailable — tap shutter for a color shot</p>
+            <div class="cam-review"><span class="review-badge">Saved to Photos ✓</span></div>
+          </div>
+          <div class="cam-modes"><span>VIDEO</span><span class="active">PHOTO</span><span>PORTRAIT</span></div>
+          <div class="cam-controls">
+            <span class="cam-thumb"></span>
+            <button class="shutter" type="button" aria-label="Take photo"></button>
+            <span class="cam-flip">⟲</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ APP: FILES ============ -->
+      <section class="app-view files-app" id="app-files" data-accent="#5e9eff">
+        <header class="app-bar"><button class="back" data-back>‹ Home</button><h2>Files</h2></header>
+        <div class="app-body">
+          <div class="fx-bar">
+            <button class="fx-up hidden" aria-label="Up one level">↑</button>
+            <span class="fx-path">No folder selected</span>
+          </div>
+          <button class="fx-pick" type="button">Choose Folder…</button>
+          <div class="fx-sort">
+            <button type="button" data-sort="name" class="active">Name</button>
+            <button type="button" data-sort="size">Size</button>
+            <button type="button" data-sort="type">Type</button>
+          </div>
+          <ul class="fx-list"></ul>
+          <p class="fx-msg"></p>
+        </div>
+      </section>
+
+      <!-- ============ APP: SETTINGS ============ -->
+      <section class="app-view settings-app" id="app-settings" data-accent="#8e8e93">
+        <header class="app-bar"><button class="back" data-back>‹ Home</button><h2>Settings</h2></header>
+        <div class="app-body">
+          <div class="set-label">WALLPAPER</div>
+          <div class="set-wallpapers"></div>
+
+          <div class="set-label">GENERAL</div>
+          <div class="set-list">
+            <div class="set-row"><span>Light Appearance</span><button class="switch" data-setting="theme-light" role="switch" aria-label="Light appearance"><span class="knob"></span></button></div>
+            <div class="set-row"><span>24-Hour Time</span><button class="switch" data-setting="clock24" role="switch" aria-label="24-hour time"><span class="knob"></span></button></div>
+            <button class="set-row action" data-action="reset-widgets"><span>Reset Widget Layout</span><span class="chev">›</span></button>
+            <button class="set-row action danger" data-action="clear-photos"><span>Clear All Photos &amp; Videos</span><span class="chev">›</span></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Home indicator (tap to go home) -->
+      <div class="home-indicator" id="homeBtn"></div>
+    </div>
+  </div>
+</div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
