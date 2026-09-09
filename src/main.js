@@ -28,6 +28,9 @@ setupCounter(document.getElementById('counter-value'));
 // Shared hooks so navigation can start/stop the live camera feed
 const cameraControls = {};
 
+// Shared hook so the lock screen can open an app straight from its shortcuts
+const navControls = {};
+
 // Shared flag: while the home screen is in edit mode, taps must not open apps
 const editState = { editing: false };
 
@@ -54,6 +57,8 @@ function setupNavigation() {
     if (screen) screen.classList.remove('app-open'); // brings the dock back
     if (cameraControls.stop) cameraControls.stop(); // release the webcam
   };
+
+  navControls.open = openApp;
 
   // Widgets open their app (unless the home screen is in edit mode)
   document.querySelectorAll('[data-app]').forEach(el => {
@@ -1118,6 +1123,15 @@ function updateClock() {
   const h = use24 ? now.getHours() : (now.getHours() % 12 || 12);
   if (clock) clock.textContent = `${h}:${pad(now.getMinutes())}`;
   if (today) today.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+  // lock screen: big padded clock + French date, like the design
+  const lockTime = document.getElementById('lockTime');
+  const lockDate = document.getElementById('lockDate');
+  if (lockTime) lockTime.textContent = `${use24 ? pad(now.getHours()) : h}:${pad(now.getMinutes())}`;
+  if (lockDate) {
+    const d = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+    lockDate.textContent = d.charAt(0).toUpperCase() + d.slice(1);
+  }
 }
 updateClock();
 setInterval(updateClock, 10000);
@@ -1363,9 +1377,9 @@ function setupMusic() {
 
   const updateNowPlaying = () => {
     const t = tracks[currentIndex];
-    if (titleEl) titleEl.textContent = t ? trackTitle(t) : 'No track';
-    if (artistEl) artistEl.textContent = t ? trackArtist(t) : 'Add music from your PC';
-    if (wTitle) wTitle.textContent = t ? trackTitle(t) : 'Music';
+    if (titleEl) titleEl.textContent = t ? trackTitle(t) : 'لا يوجد مقطع';
+    if (artistEl) artistEl.textContent = t ? trackArtist(t) : 'أضف ملفات صوتية من جهازك';
+    if (wTitle) wTitle.textContent = t ? trackTitle(t) : 'صوت الحق';
     if (wArtist) wArtist.textContent = t ? trackArtist(t) : 'Tap to open';
   };
 
@@ -1526,7 +1540,7 @@ function setupMusic() {
   };
 
   const togglePlay = () => {
-    if (!tracks.length) { if (artistEl) artistEl.textContent = 'Add music first — tap ＋ Add Music…'; return; }
+    if (!tracks.length) { if (artistEl) artistEl.textContent = 'أضف ملفات صوتية أولاً — اضغط ＋ أضف ملفات صوتية…'; return; }
     if (currentIndex < 0) { play(0); return; }
     if (playing) { offset = positionSec(); stopSource(); playing = false; setPlayIcon(); saveLast(); }
     else if (buffer) { ensureCtx().resume().catch(() => {}); startAt(offset >= buffer.duration ? 0 : offset); }
@@ -1637,3 +1651,456 @@ function setupMusic() {
 }
 
 setupMusic();
+
+// ---------- EduLearn: learning dashboard (widgets, goal, streak, progress) ----------
+function setupLearn() {
+  const app = document.getElementById('app-learn');
+  if (!app) return;
+
+  const KEY = 'edulearn-state';
+  const DAYS_FR = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+  const SUBJECT_COLORS = { Design: '#2563eb', Development: '#16a34a', Marketing: '#f59e0b' };
+  const LESSON_POOL = {
+    Design: ['Color Theory', 'Typographie', 'Grilles & espacement', 'Design System', 'Accessibilité'],
+    Development: ['HTML Basics', 'Les fonctions', 'Les composants', 'Grid & Flexbox', 'APIs & fetch'],
+    Marketing: ['Bases du SEO', 'Campagnes Meta', 'Séquences email', 'Analytics', 'Copywriting'],
+  };
+  const MIN_PER_LESSON = 10; // progression gagnée par leçon terminée
+
+  const dayKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const today = () => dayKey(new Date());
+  const shift = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+
+  const seed = () => {
+    const now = new Date();
+    const days = {};
+    for (let i = 1; i <= 6; i++) days[dayKey(shift(now, -i))] = true; // six jours déjà validés
+    return {
+      goal: 40,
+      current: 'uiux',
+      next: 'web',
+      minutes: { [today()]: 30 },
+      days,
+      courses: [
+        { id: 'uiux', name: 'UI/UX Design', subject: 'Design', lesson: 3, lessonName: 'Color Theory', progress: 60 },
+        { id: 'web', name: 'Web Development', subject: 'Development', lesson: 4, lessonName: 'HTML Basics', progress: 40 },
+        { id: 'seo', name: 'Marketing Digital', subject: 'Marketing', lesson: 2, lessonName: 'Bases du SEO', progress: 40 },
+        { id: 'fig', name: 'Figma Avancé', subject: 'Design', lesson: 5, lessonName: 'Auto Layout', progress: 80 },
+        { id: 'js', name: 'JavaScript Moderne', subject: 'Development', lesson: 2, lessonName: 'Les fonctions', progress: 55 },
+        { id: 'brand', name: 'Brand Design', subject: 'Design', lesson: 1, lessonName: 'Identité visuelle', progress: 75 },
+        { id: 'react', name: 'React Essentiel', subject: 'Development', lesson: 3, lessonName: 'Les composants', progress: 60 },
+        { id: 'ads', name: 'Publicité en ligne', subject: 'Marketing', lesson: 2, lessonName: 'Campagnes Meta', progress: 45 },
+        { id: 'ux', name: 'UX Research', subject: 'Design', lesson: 4, lessonName: 'Interviews utilisateurs', progress: 70 },
+        { id: 'css', name: 'CSS Layouts', subject: 'Development', lesson: 6, lessonName: 'Grid & Flexbox', progress: 85 },
+        { id: 'mail', name: 'Email Marketing', subject: 'Marketing', lesson: 1, lessonName: 'Séquences', progress: 35 },
+        { id: 'proto', name: 'Prototypage', subject: 'Design', lesson: 2, lessonName: 'Micro-interactions', progress: 65 },
+      ],
+      todayLessons: [
+        { courseId: 'uiux', name: 'Leçon 3 : Color Theory', done: false },
+        { courseId: 'web', name: 'Leçon 4 : HTML Basics', done: false },
+        { courseId: 'js', name: 'Leçon 2 : Les fonctions', done: false },
+        { courseId: 'seo', name: 'Leçon 2 : Bases du SEO', done: false },
+        { courseId: 'fig', name: 'Leçon 5 : Auto Layout', done: false },
+      ],
+    };
+  };
+
+  let state;
+  try {
+    state = JSON.parse(localStorage.getItem(KEY));
+  } catch { /* corrompu */ }
+  if (!state || !Array.isArray(state.courses)) state = seed();
+
+  const save = () => {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* storage plein */ }
+  };
+
+  const $ = id => document.getElementById(id);
+  const course = id => state.courses.find(c => c.id === id) || state.courses[0];
+  const minutesToday = () => state.minutes[today()] || 0;
+  const lessonLabel = c => `Leçon ${c.lesson} : ${c.lessonName}`;
+
+  // moyennes par matière + progression globale
+  const subjectStats = () => {
+    const by = {};
+    state.courses.forEach(c => {
+      by[c.subject] = by[c.subject] || { total: 0, n: 0 };
+      by[c.subject].total += c.progress;
+      by[c.subject].n += 1;
+    });
+    return Object.entries(by).map(([name, v]) => ({ name, pct: Math.round(v.total / v.n) }));
+  };
+  const overall = () => Math.round(state.courses.reduce((s, c) => s + c.progress, 0) / state.courses.length);
+
+  // suite de jours consécutifs, en remontant depuis aujourd'hui (ou hier si rien encore aujourd'hui)
+  const streakCount = () => {
+    const now = new Date();
+    let n = 0;
+    let cursor = state.days[today()] ? now : shift(now, -1);
+    while (state.days[dayKey(cursor)]) { n += 1; cursor = shift(cursor, -1); }
+    return n;
+  };
+
+  // lundi → dimanche de la semaine en cours
+  const weekDays = () => {
+    const now = new Date();
+    const monday = shift(now, -((now.getDay() + 6) % 7));
+    return DAYS_FR.map((label, i) => {
+      const d = shift(monday, i);
+      const key = dayKey(d);
+      return { label, key, done: !!state.days[key], isToday: key === today(), future: d > now && key !== today() };
+    });
+  };
+
+  const setArc = (el, pct) => {
+    if (!el) return;
+    const c = 2 * Math.PI * 50; // r = 50 dans le viewBox
+    el.style.strokeDasharray = c.toFixed(2);
+    el.style.strokeDashoffset = (c * (1 - Math.min(100, Math.max(0, pct)) / 100)).toFixed(2);
+  };
+
+  let popDay = null; // jour à animer au prochain rendu
+
+  const render = () => {
+    const cur = course(state.current);
+    const nxt = course(state.next);
+
+    // 1. Continuer l'apprentissage
+    $('eduHeroCourse').textContent = cur.name;
+    $('eduHeroLesson').textContent = lessonLabel(cur);
+    $('eduHeroBar').style.width = `${cur.progress}%`;
+    $('eduHeroPct').textContent = `${cur.progress}%`;
+
+    // 2. Objectif quotidien
+    const done = minutesToday();
+    const pct = Math.min(100, Math.round((done / state.goal) * 100));
+    setArc($('eduGoalArc'), pct);
+    $('eduGoalPct').textContent = `${pct}%`;
+    $('eduGoalDone').textContent = done;
+    $('eduGoalTarget').textContent = state.goal;
+    $('eduFlame').classList.toggle('burn', pct >= 100);
+
+    // 3 + 4. compteurs
+    $('eduCourseCount').textContent = state.courses.length;
+    $('eduLessonCount').textContent = state.todayLessons.length;
+
+    // 5. Continuer à apprendre
+    $('eduNextCat').textContent = nxt.subject;
+    $('eduNextName').textContent = nxt.name;
+    $('eduNextLesson').textContent = lessonLabel(nxt);
+    $('eduNextBar').style.width = `${nxt.progress}%`;
+    $('eduNextPct').textContent = `${nxt.progress}%`;
+    $('eduNextGo').textContent = nxt.progress > 0 ? 'Continuer' : 'Commencer';
+
+    // 6. Ma progression
+    setArc($('eduOverallArc'), overall());
+    $('eduOverallPct').textContent = `${overall()}%`;
+    const subjects = $('eduSubjects');
+    subjects.innerHTML = '';
+    subjectStats().forEach(s => {
+      const li = document.createElement('li');
+      li.innerHTML = '<span class="edu-sub-head"><span class="edu-dot"></span><span class="edu-sub-name"></span><span class="edu-sub-pct"></span></span><span class="edu-bar"><span></span></span>';
+      li.querySelector('.edu-dot').style.background = SUBJECT_COLORS[s.name] || '#6c5ce7';
+      li.querySelector('.edu-sub-name').textContent = s.name;
+      li.querySelector('.edu-sub-pct').textContent = `${s.pct}%`;
+      const fill = li.querySelector('.edu-bar span');
+      fill.style.width = `${s.pct}%`;
+      fill.style.background = SUBJECT_COLORS[s.name] || '#6c5ce7';
+      subjects.appendChild(li);
+    });
+
+    // 7. Streak
+    const n = streakCount();
+    $('eduStreakN').textContent = n;
+    $('eduStreakMsg').textContent = state.days[today()]
+      ? 'Continue comme ça !'
+      : (n ? 'Étudie aujourd\'hui pour garder ta série 🔥' : 'Commence une nouvelle série aujourd\'hui !');
+    const week = $('eduWeek');
+    week.innerHTML = '';
+    weekDays().forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'edu-day' + (d.done ? ' done' : '') + (d.isToday ? ' today' : '') + (d.key === popDay ? ' pop' : '');
+      el.innerHTML = '<span class="edu-day-dot">✓</span><span class="edu-day-lbl"></span>';
+      el.querySelector('.edu-day-lbl').textContent = d.label;
+      week.appendChild(el);
+    });
+    popDay = null;
+
+    // miroir sur le widget de l'écran d'accueil
+    const wCourse = $('eduWCourse');
+    if (wCourse) {
+      wCourse.textContent = cur.name;
+      $('eduWBar').style.width = `${cur.progress}%`;
+      $('eduWPct').textContent = `${cur.progress}%`;
+      $('eduWLesson').textContent = `Leçon ${cur.lesson}`;
+    }
+  };
+
+  // ---- navigation entre les vues internes ----
+  const showView = id => {
+    app.querySelectorAll('.edu-view').forEach(v => v.classList.toggle('active', v.id === id));
+    app.querySelector('.app-body').scrollTop = 0;
+  };
+
+  // ---- lecteur de leçon + chronomètre ----
+  let timer = null;
+  let seconds = 0;
+
+  const paintTimer = () => {
+    $('eduTimer').textContent = `${pad(Math.floor(seconds / 60))}:${pad(seconds % 60)}`;
+  };
+
+  const stopTimer = () => { clearInterval(timer); timer = null; };
+
+  const openLesson = id => {
+    state.current = id;
+    const c = course(id);
+    $('eduLessonCat').textContent = c.subject;
+    $('eduLessonCourse').textContent = c.name;
+    $('eduLessonName').textContent = lessonLabel(c);
+    $('eduLessonBar').style.width = `${c.progress}%`;
+    $('eduLessonPct').textContent = `${c.progress}%`;
+    seconds = 0;
+    paintTimer();
+    showView('eduViewLesson');
+    save();
+    render();
+    stopTimer();
+    timer = setInterval(() => {
+      seconds += 1;
+      paintTimer();
+      if (seconds % 60 === 0) { // chaque minute écoulée compte pour l'objectif
+        state.minutes[today()] = minutesToday() + 1;
+        save();
+        render();
+      }
+    }, 1000);
+  };
+
+  const finishLesson = () => {
+    const c = course(state.current);
+    const rest = seconds % 60;
+    if (rest) state.minutes[today()] = minutesToday() + 1; // minute entamée = minute comptée
+    stopTimer();
+
+    c.progress = Math.min(100, c.progress + MIN_PER_LESSON);
+    c.lesson += 1;
+    const pool = LESSON_POOL[c.subject] || LESSON_POOL.Design;
+    c.lessonName = pool[(c.lesson - 1) % pool.length];
+
+    const planned = state.todayLessons.find(l => l.courseId === c.id && !l.done) || state.todayLessons.find(l => !l.done);
+    if (planned) planned.done = true;
+
+    const wasStreak = streakCount();
+    if (!state.days[today()]) {
+      state.days[today()] = true;
+      popDay = today(); // anime la pastille du jour
+    }
+    state.next = (state.courses.find(x => x.id !== c.id && x.progress < 100) || c).id;
+
+    save();
+    render();
+    showView('eduViewHome');
+    if (streakCount() > wasStreak) {
+      const msg = $('eduStreakMsg');
+      msg.textContent = `Série de ${streakCount()} jours — continue comme ça !`;
+    }
+  };
+
+  // ---- listes ----
+  const renderCourses = () => {
+    const list = $('eduCourseList');
+    list.innerHTML = '';
+    state.courses.forEach(c => {
+      const li = document.createElement('li');
+      li.innerHTML = '<div class="edu-li-info"><p class="edu-li-name"></p><p class="edu-li-sub"></p><span class="edu-bar"><span></span></span></div><span class="edu-li-pct"></span>';
+      li.querySelector('.edu-li-name').textContent = c.name;
+      li.querySelector('.edu-li-sub').textContent = `${c.subject} · ${lessonLabel(c)}`;
+      li.querySelector('.edu-bar span').style.width = `${c.progress}%`;
+      li.querySelector('.edu-li-pct').textContent = `${c.progress}%`;
+      li.addEventListener('click', () => openLesson(c.id));
+      list.appendChild(li);
+    });
+  };
+
+  const renderToday = () => {
+    const list = $('eduTodayList');
+    list.innerHTML = '';
+    state.todayLessons.forEach(l => {
+      const c = course(l.courseId);
+      const li = document.createElement('li');
+      li.className = l.done ? 'done' : '';
+      li.innerHTML = '<span class="edu-check">✓</span><div class="edu-li-info"><p class="edu-li-name"></p><p class="edu-li-sub"></p></div>';
+      li.querySelector('.edu-li-name').textContent = l.name;
+      li.querySelector('.edu-li-sub').textContent = c.name;
+      li.addEventListener('click', () => openLesson(l.courseId));
+      list.appendChild(li);
+    });
+  };
+
+  const renderStats = () => {
+    const list = $('eduStats');
+    const totalMin = Object.values(state.minutes).reduce((a, b) => a + b, 0);
+    const finished = state.courses.filter(c => c.progress >= 100).length;
+    const rows = [
+      ['Progression globale', `${overall()}%`],
+      ...subjectStats().map(s => [s.name, `${s.pct}%`]),
+      ['Cours inscrits', state.courses.length],
+      ['Cours terminés', finished],
+      ['Temps aujourd\'hui', `${minutesToday()} min`],
+      ['Temps total étudié', `${totalMin} min`],
+      ['Objectif quotidien', `${state.goal} min`],
+      ['Série en cours', `${streakCount()} jours`],
+    ];
+    list.innerHTML = '';
+    rows.forEach(([label, value]) => {
+      const li = document.createElement('li');
+      li.innerHTML = '<span></span><b></b>';
+      li.querySelector('span').textContent = label;
+      li.querySelector('b').textContent = value;
+      list.appendChild(li);
+    });
+  };
+
+  // ---- interactions ----
+  $('eduHero').addEventListener('click', () => openLesson(state.current));
+  $('eduNextRow').addEventListener('click', () => openLesson(state.next));
+  $('eduNextGo').addEventListener('click', () => openLesson(state.next));
+  $('eduNextAll').addEventListener('click', () => { renderCourses(); showView('eduViewCourses'); });
+  $('eduCoursesCard').addEventListener('click', () => { renderCourses(); showView('eduViewCourses'); });
+  $('eduTodayCard').addEventListener('click', () => { renderToday(); showView('eduViewToday'); });
+  $('eduStatsAll').addEventListener('click', () => { renderStats(); showView('eduViewStats'); });
+  $('eduFinish').addEventListener('click', finishLesson);
+
+  app.querySelectorAll('[data-edu-back]').forEach(b =>
+    b.addEventListener('click', () => { stopTimer(); showView('eduViewHome'); render(); })
+  );
+
+  // quitter l'app arrête le chrono et revient à l'accueil de l'app
+  const leave = () => { stopTimer(); showView('eduViewHome'); render(); };
+  app.querySelector('.back').addEventListener('click', leave);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') leave(); });
+
+  // menu ⋮ : modifier l'objectif quotidien
+  const edit = $('eduGoalEdit');
+  const paintPresets = () => edit.querySelectorAll('button').forEach(b =>
+    b.classList.toggle('on', Number(b.dataset.goal) === state.goal)
+  );
+  $('eduGoalMenu').addEventListener('click', () => {
+    const open = edit.hasAttribute('hidden');
+    edit.toggleAttribute('hidden', !open);
+    $('eduGoalMenu').setAttribute('aria-expanded', String(open));
+    paintPresets();
+  });
+  edit.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    state.goal = Number(b.dataset.goal);
+    save();
+    paintPresets();
+    render();
+  }));
+
+  // Réglages → remise à zéro des données EduLearn
+  document.querySelectorAll('[data-action="reset-learn"]').forEach(btn =>
+    btn.addEventListener('click', () => {
+      state = seed();
+      save();
+      render();
+      showView('eduViewHome');
+    })
+  );
+
+  render();
+}
+
+setupLearn();
+
+// ---------- Screen saver: iOS-style lock screen after a spell of inactivity ----------
+function setupScreensaver() {
+  const lock = document.getElementById('lockscreen');
+  if (!lock) return;
+
+  const IDLE_MS = 60000;   // how long the phone sits untouched before it locks
+  const SWIPE_PX = 60;     // upward distance that counts as "swipe to unlock"
+  let idleTimer = null;
+  let drag = null;
+
+  const locked = () => !lock.classList.contains('hidden');
+
+  const lockNow = (force = false) => {
+    if (locked() || (editState.editing && !force)) return; // a power-button press locks anyway
+    updateClock(); // the big clock must be right the moment it appears
+    lock.classList.remove('hidden');
+    lock.setAttribute('aria-hidden', 'false');
+  };
+
+  const unlock = () => {
+    if (!locked()) return;
+    lock.style.transform = '';
+    lock.classList.remove('dragging');
+    lock.classList.add('hidden');
+    lock.setAttribute('aria-hidden', 'true');
+    arm();
+  };
+
+  const arm = () => {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => lockNow(), IDLE_MS);
+  };
+
+  // any activity on the unlocked phone pushes the screen saver back
+  ['pointerdown', 'pointermove', 'keydown', 'wheel', 'touchstart'].forEach(evt =>
+    document.addEventListener(evt, () => { if (!locked()) arm(); }, { passive: true })
+  );
+
+  // swipe up (or a plain tap / any key) dismisses it
+  lock.addEventListener('pointerdown', e => {
+    drag = { y: e.clientY, moved: false };
+    lock.classList.add('dragging');
+    lock.setPointerCapture(e.pointerId);
+  });
+
+  lock.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const dy = Math.min(0, e.clientY - drag.y); // upward only
+    if (dy < -4) drag.moved = true;
+    lock.style.transform = `translateY(${dy}px)`;
+  });
+
+  const endDrag = e => {
+    if (!drag) return;
+    const dy = e.clientY - drag.y;
+    const wasDrag = drag.moved;
+    drag = null;
+    lock.classList.remove('dragging');
+    if (dy <= -SWIPE_PX || !wasDrag) unlock();  // swiped far enough, or just tapped
+    else lock.style.transform = '';             // not far enough: settle back
+  };
+  lock.addEventListener('pointerup', endDrag);
+  lock.addEventListener('pointercancel', endDrag);
+
+  document.addEventListener('keydown', () => { if (locked()) unlock(); });
+  lock.addEventListener('wheel', e => { if (e.deltaY < 0) unlock(); }, { passive: true });
+
+  // Power side-button: lock instantly, press again to wake
+  const power = document.querySelector('.side-btn.power');
+  if (power) {
+    power.setAttribute('role', 'button');
+    power.setAttribute('aria-label', 'Lock screen');
+    power.addEventListener('click', () => (locked() ? unlock() : lockNow(true)));
+  }
+
+  // Camera shortcut: unlock straight into the Camera app
+  const camBtn = document.getElementById('lockCam');
+  if (camBtn) {
+    camBtn.addEventListener('pointerdown', e => e.stopPropagation()); // don't start a swipe
+    camBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      unlock();
+      if (navControls.open) navControls.open('camera');
+    });
+  }
+
+  arm();
+}
+
+setupScreensaver();

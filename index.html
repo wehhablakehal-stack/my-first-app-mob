@@ -38,6 +38,18 @@
         </div>
 
         <div class="grid">
+          <!-- EduLearn widget (opens the learning dashboard) -->
+          <section class="widget edu-widget" data-app="learn">
+            <div class="w-head">
+              <span class="w-icon edu-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 1 8l11 5 9-4.09V15h2V8L12 3ZM5 12.18v3.3C5 16.58 8.13 19 12 19s7-2.42 7-3.52v-3.3l-7 3.18-7-3.18Z"/></svg></span>
+              <span class="w-title">EduLearn</span>
+              <span class="chev">›</span>
+            </div>
+            <p class="edu-w-course" id="eduWCourse">UI/UX Design</p>
+            <div class="edu-bar slim"><span id="eduWBar" style="width:60%"></span></div>
+            <p class="w-sub"><span id="eduWPct">60%</span> · <span id="eduWLesson">Leçon 3</span></p>
+          </section>
+
           <!-- Counter widget (opens Counter app) -->
           <section class="widget counter-widget" data-app="counter">
             <div class="w-head">
@@ -98,10 +110,13 @@
           </section>
 
           <section class="widget music" data-app="music">
-            <div class="art"></div>
+            <div class="brand">
+              <div class="art" role="img" aria-label="صوت الحق"></div>
+              <p class="brand-name" lang="ar" dir="rtl">صوت الحق</p>
+            </div>
             <div class="track">
-              <p class="track-name">Titanium Dreams</p>
-              <p class="w-sub">Aurora</p>
+              <p class="track-name">صوت الحق</p>
+              <p class="w-sub">Tap to open</p>
               <div class="bars"><i></i><i></i><i></i><i></i><i></i></div>
             </div>
             <span class="play">▶</span>
@@ -164,7 +179,7 @@
           <div class="bat-list">
             <div class="bat-row"><span>Photos</span><span class="w-sub">32%</span></div>
             <div class="bat-row"><span>Safari</span><span class="w-sub">21%</span></div>
-            <div class="bat-row"><span>Music</span><span class="w-sub">14%</span></div>
+            <div class="bat-row"><span lang="ar" dir="rtl">صوت الحق</span><span class="w-sub">14%</span></div>
             <div class="bat-row"><span>Maps</span><span class="w-sub">9%</span></div>
           </div>
         </div>
@@ -186,16 +201,16 @@
 
       <!-- ============ APP: MUSIC ============ -->
       <section class="app-view music-app" id="app-music" data-accent="#ff2d55">
-        <header class="app-bar"><button class="back" data-back>‹ Home</button><h2>Music</h2></header>
+        <header class="app-bar"><button class="back" data-back>‹ Home</button><h2 class="app-title"><img class="app-logo" src="/sawt-alhaq.svg" alt="" width="22" height="22"><span lang="ar" dir="rtl">صوت الحق</span></h2></header>
         <div class="app-body">
           <div class="np-art" id="npArt"></div>
-          <p class="np-title" id="npTitle">No track</p>
-          <p class="np-artist" id="npArtist">Add music from your PC</p>
+          <p class="np-title" id="npTitle" dir="auto">لا يوجد مقطع</p>
+          <p class="np-artist" id="npArtist" dir="auto">أضف ملفات صوتية من جهازك</p>
           <div class="np-progress" id="npProgress"><span id="npFill"></span></div>
           <div class="np-times"><span id="npCur">0:00</span><span id="npDur">0:00</span></div>
           <div class="np-controls"><span id="npPrev">⏮</span><span class="np-play" id="npPlay">▶</span><span id="npNext">⏭</span></div>
           <div class="np-vol-row"><span class="np-vol-ic">🔈</span><input class="np-vol" id="npVol" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume"><span class="np-vol-ic">🔊</span></div>
-          <button class="np-add" id="npAdd" type="button">＋ Add Music…</button>
+          <button class="np-add" id="npAdd" type="button" lang="ar" dir="rtl">＋ أضف ملفات صوتية…</button>
           <button class="np-output" id="npOutput" type="button">🔊 Output: Default</button>
           <input id="npFile" type="file" accept="audio/*" multiple hidden>
           <ul class="np-list" id="npList"></ul>
@@ -266,10 +281,204 @@
             <div class="set-row"><span>Light Appearance</span><button class="switch" data-setting="theme-light" role="switch" aria-label="Light appearance"><span class="knob"></span></button></div>
             <div class="set-row"><span>24-Hour Time</span><button class="switch" data-setting="clock24" role="switch" aria-label="24-hour time"><span class="knob"></span></button></div>
             <button class="set-row action" data-action="reset-widgets"><span>Reset Widget Layout</span><span class="chev">›</span></button>
+            <button class="set-row action" data-action="reset-learn"><span>Reset EduLearn Data</span><span class="chev">›</span></button>
             <button class="set-row action danger" data-action="clear-photos"><span>Clear All Photos &amp; Videos</span><span class="chev">›</span></button>
           </div>
         </div>
       </section>
+
+      <!-- ============ APP: EDULEARN ============ -->
+      <section class="app-view learn-app" id="app-learn" data-accent="#6c5ce7">
+        <header class="app-bar"><button class="back" data-back>‹ Home</button><h2>EduLearn</h2></header>
+        <div class="app-body edu-body">
+
+          <!-- ---- Home of the learning dashboard ---- -->
+          <div class="edu-view active" id="eduViewHome">
+
+            <!-- 1. Continuer l'apprentissage (large) -->
+            <div class="edu-card edu-hero" id="eduHero" role="button" tabindex="0">
+              <div class="edu-hero-brand">
+                <span class="edu-logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 1 8l11 5 9-4.09V15h2V8L12 3ZM5 12.18v3.3C5 16.58 8.13 19 12 19s7-2.42 7-3.52v-3.3l-7 3.18-7-3.18Z"/></svg></span>
+                <span class="edu-brand">EduLearn</span>
+              </div>
+              <p class="edu-hero-kicker">Continuer l'apprentissage</p>
+              <h3 class="edu-hero-course" id="eduHeroCourse">UI/UX Design</h3>
+              <p class="edu-hero-lesson" id="eduHeroLesson">Leçon 3 : Color Theory</p>
+              <div class="edu-hero-row">
+                <div class="edu-bar light"><span id="eduHeroBar" style="width:60%"></span></div>
+                <span class="edu-hero-pct" id="eduHeroPct">60%</span>
+              </div>
+              <span class="edu-cta">Continuer</span>
+              <img class="edu-illus" src="/edulearn-reader.svg" alt="" width="200" height="220">
+            </div>
+
+            <!-- 2. Objectif quotidien (medium) -->
+            <div class="edu-card edu-goal">
+              <div class="edu-card-head">
+                <h4>Objectif quotidien</h4>
+                <button class="edu-menu" id="eduGoalMenu" type="button" aria-label="Modifier l'objectif" aria-expanded="false">⋮</button>
+              </div>
+              <div class="edu-goal-body">
+                <div class="edu-ring">
+                  <svg viewBox="0 0 120 120" aria-hidden="true">
+                    <circle class="edu-ring-bg" cx="60" cy="60" r="50"/>
+                    <circle class="edu-ring-fg green" id="eduGoalArc" cx="60" cy="60" r="50"/>
+                  </svg>
+                  <span class="edu-ring-mid">
+                    <span class="edu-flame" id="eduFlame">🔥</span>
+                    <b id="eduGoalPct">75%</b>
+                    <span class="edu-ring-cap">Complété</span>
+                  </span>
+                </div>
+                <div class="edu-goal-nums">
+                  <p><b id="eduGoalDone">30</b> min<span>Aujourd'hui</span></p>
+                  <p class="muted"><b id="eduGoalTarget">40</b> min<span>Objectif</span></p>
+                </div>
+              </div>
+              <div class="edu-goal-edit" id="eduGoalEdit" hidden>
+                <span class="edu-goal-edit-label">Objectif quotidien</span>
+                <div class="edu-goal-presets">
+                  <button type="button" data-goal="20">20 min</button>
+                  <button type="button" data-goal="30">30 min</button>
+                  <button type="button" data-goal="40">40 min</button>
+                  <button type="button" data-goal="60">60 min</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3 + 4. Mes cours / Leçons aujourd'hui (small) -->
+            <div class="edu-small-row">
+              <div class="edu-card edu-small" id="eduCoursesCard" role="button" tabindex="0">
+                <span class="edu-small-ic green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h13a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v11.2A3 3 0 0 1 6 17h12V5H6Zm1 2h4v6l-2-1.4L7 13V7Z"/></svg></span>
+                <p class="edu-small-num green" id="eduCourseCount">12</p>
+                <p class="edu-small-lbl">Cours<br>inscrits</p>
+              </div>
+              <div class="edu-card edu-small" id="eduTodayCard" role="button" tabindex="0">
+                <span class="edu-small-ic blue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2h10V2h2v2h1a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1V2h2ZM4 9v11h16V9H4Zm6.6 8.4-3-3 1.4-1.4 1.6 1.6 3.9-3.9 1.4 1.4-5.3 5.3Z"/></svg></span>
+                <p class="edu-small-num blue" id="eduLessonCount">5</p>
+                <p class="edu-small-lbl">Leçons<br>aujourd'hui</p>
+              </div>
+            </div>
+
+            <!-- 5. Continuer à apprendre (medium) -->
+            <div class="edu-card edu-next">
+              <div class="edu-card-head">
+                <h4>Continuer à apprendre 🚀</h4>
+                <button class="edu-link" id="eduNextAll" type="button">Voir tout</button>
+              </div>
+              <div class="edu-next-row" id="eduNextRow" role="button" tabindex="0">
+                <span class="edu-next-ic" id="eduNextIc">&lt;/&gt;</span>
+                <div class="edu-next-info">
+                  <p class="edu-next-cat" id="eduNextCat">Development</p>
+                  <p class="edu-next-name" id="eduNextName">Web Development</p>
+                  <p class="edu-next-lesson" id="eduNextLesson">Leçon 4 : HTML Basics</p>
+                  <div class="edu-hero-row">
+                    <div class="edu-bar"><span id="eduNextBar" style="width:40%"></span></div>
+                    <span class="edu-next-pct" id="eduNextPct">40%</span>
+                  </div>
+                </div>
+              </div>
+              <button class="edu-btn" id="eduNextGo" type="button">Continuer</button>
+            </div>
+
+            <!-- 6. Ma progression (large) -->
+            <div class="edu-card edu-progress">
+              <div class="edu-card-head">
+                <h4>Ma progression</h4>
+                <button class="edu-link" id="eduStatsAll" type="button">Voir tout</button>
+              </div>
+              <div class="edu-progress-body">
+                <div class="edu-ring small">
+                  <svg viewBox="0 0 120 120" aria-hidden="true">
+                    <circle class="edu-ring-bg violet" cx="60" cy="60" r="50"/>
+                    <circle class="edu-ring-fg violet" id="eduOverallArc" cx="60" cy="60" r="50"/>
+                  </svg>
+                  <span class="edu-ring-mid"><b id="eduOverallPct">65%</b><span class="edu-ring-cap">Global</span></span>
+                </div>
+                <ul class="edu-subjects" id="eduSubjects"></ul>
+              </div>
+            </div>
+
+            <!-- 7. Streak (large, dark) -->
+            <div class="edu-card edu-streak">
+              <div class="edu-card-head"><h4>Streak 🔥</h4></div>
+              <p class="edu-streak-count"><b id="eduStreakN">7</b> <span>jours</span></p>
+              <p class="edu-streak-msg" id="eduStreakMsg">Continue comme ça !</p>
+              <div class="edu-week" id="eduWeek"></div>
+            </div>
+          </div>
+
+          <!-- ---- Lesson player ---- -->
+          <div class="edu-view" id="eduViewLesson">
+            <button class="edu-back" data-edu-back type="button">‹ Retour</button>
+            <div class="edu-card edu-lesson">
+              <p class="edu-lesson-cat" id="eduLessonCat">Design</p>
+              <h3 class="edu-lesson-course" id="eduLessonCourse">UI/UX Design</h3>
+              <p class="edu-lesson-name" id="eduLessonName">Leçon 3 : Color Theory</p>
+              <p class="edu-timer" id="eduTimer">00:00</p>
+              <p class="edu-timer-cap">Temps d'étude sur cette leçon</p>
+              <div class="edu-hero-row">
+                <div class="edu-bar"><span id="eduLessonBar" style="width:60%"></span></div>
+                <span class="edu-next-pct" id="eduLessonPct">60%</span>
+              </div>
+              <button class="edu-btn wide" id="eduFinish" type="button">Terminer la leçon</button>
+              <p class="edu-note">Le temps passé ici compte pour ton objectif quotidien.</p>
+            </div>
+          </div>
+
+          <!-- ---- Courses list ---- -->
+          <div class="edu-view" id="eduViewCourses">
+            <button class="edu-back" data-edu-back type="button">‹ Retour</button>
+            <h3 class="edu-view-title">Mes cours</h3>
+            <ul class="edu-list" id="eduCourseList"></ul>
+          </div>
+
+          <!-- ---- Today's lessons ---- -->
+          <div class="edu-view" id="eduViewToday">
+            <button class="edu-back" data-edu-back type="button">‹ Retour</button>
+            <h3 class="edu-view-title">Leçons aujourd'hui</h3>
+            <ul class="edu-list" id="eduTodayList"></ul>
+          </div>
+
+          <!-- ---- Detailed stats ---- -->
+          <div class="edu-view" id="eduViewStats">
+            <button class="edu-back" data-edu-back type="button">‹ Retour</button>
+            <h3 class="edu-view-title">Statistiques</h3>
+            <div class="edu-card"><ul class="edu-stats" id="eduStats"></ul></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SCREEN SAVER / LOCK SCREEN ============ -->
+      <div class="lockscreen hidden" id="lockscreen" aria-hidden="true">
+        <div class="lock-status">
+          <span class="lock-carrier">Djezzy</span>
+          <span class="status-right">
+            <svg class="ic" viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+            <svg class="ic" viewBox="0 0 16 12" aria-hidden="true"><path d="M8 2.5C10.4 2.5 12.6 3.4 14.2 5l1.3-1.4C13.5 1.6 10.9.5 8 .5S2.5 1.6.5 3.6L1.8 5C3.4 3.4 5.6 2.5 8 2.5Z"/><path d="M8 6c1.3 0 2.5.5 3.4 1.4l1.3-1.4C11.5 4.7 9.8 4 8 4s-3.5.7-4.7 2l1.3 1.4C5.5 6.5 6.7 6 8 6Z"/><circle cx="8" cy="9.8" r="1.7"/></svg>
+            <span class="battery"><span class="battery-fill"></span></span>
+          </span>
+        </div>
+
+        <div class="lock-clock">
+          <svg class="lock-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3h.5A1.5 1.5 0 0 1 19 11.5v8A1.5 1.5 0 0 1 17.5 21h-11A1.5 1.5 0 0 1 5 19.5v-8A1.5 1.5 0 0 1 6.5 10H7Zm2 0h6V7a3 3 0 0 0-6 0v3Z"/></svg>
+          <p class="lock-time" id="lockTime">09:41</p>
+          <p class="lock-date" id="lockDate">Mardi 21 mai</p>
+        </div>
+
+        <div class="lock-bottom">
+          <div class="lock-actions">
+            <span class="lock-btn" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M9 2h6v3.2a2 2 0 0 1-.3 1l-.7 1.2V21a2 2 0 0 1-4 0V7.4l-.7-1.2a2 2 0 0 1-.3-1V2Z"/></svg>
+            </span>
+            <button class="lock-btn" id="lockCam" type="button" aria-label="Open Camera">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 4h5.6l1.1 2H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.1l1.1-2Zm2.8 4.8a4.6 4.6 0 1 0 0 9.2 4.6 4.6 0 0 0 0-9.2Zm0 2a2.6 2.6 0 1 1 0 5.2 2.6 2.6 0 0 1 0-5.2Z"/></svg>
+            </button>
+          </div>
+          <p class="lock-hint">Balayez vers le haut<br>pour déverrouiller</p>
+          <div class="lock-indicator"></div>
+        </div>
+      </div>
 
       <!-- Home indicator (tap to go home) -->
       <div class="home-indicator" id="homeBtn"></div>

@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 860" width="400" height="860" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4b3f7d"/>
+      <stop offset="0.28" stop-color="#7c5f9e"/>
+      <stop offset="0.52" stop-color="#b982ad"/>
+      <stop offset="0.72" stop-color="#e79a92"/>
+      <stop offset="0.88" stop-color="#f6b482"/>
+      <stop offset="1" stop-color="#fbd79a"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7c791"/>
+      <stop offset="0.18" stop-color="#e9a08f"/>
+      <stop offset="0.5" stop-color="#c98cad"/>
+      <stop offset="1" stop-color="#9d7fae"/>
+    </linearGradient>
+    <linearGradient id="ridgeFar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9a83b4"/>
+      <stop offset="1" stop-color="#7d6a9c"/>
+    </linearGradient>
+    <linearGradient id="ridgeLit" x1="0" y1="0" x2="1" y2="0.4">
+      <stop offset="0" stop-color="#7a6490"/>
+      <stop offset="0.55" stop-color="#c08e97"/>
+      <stop offset="1" stop-color="#f0b184"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff6d8" stop-opacity="0.95"/>
+      <stop offset="0.35" stop-color="#ffd79a" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ffb877" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="glitter" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff3cf" stop-opacity="0.85"/>
+      <stop offset="0.5" stop-color="#ffd39a" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#ffc98f" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="bank" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4a5f46"/>
+      <stop offset="1" stop-color="#2c3a2f"/>
+    </linearGradient>
+    <linearGradient id="bloom" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e7d2f5"/>
+      <stop offset="0.45" stop-color="#b98ada"/>
+      <stop offset="1" stop-color="#7d5aa8"/>
+    </linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+    <filter id="softer" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+    <filter id="ripple" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="2.2"/>
+    </filter>
+
+    <g id="lupine">
+      <path d="M0 0 L0 -46" stroke="#3f5540" stroke-width="2.4" fill="none"/>
+      <ellipse cx="0" cy="-8" rx="6.5" ry="4.6" fill="url(#bloom)"/>
+      <ellipse cx="0" cy="-17" rx="6" ry="4.3" fill="url(#bloom)"/>
+      <ellipse cx="0" cy="-25" rx="5.2" ry="3.9" fill="url(#bloom)"/>
+      <ellipse cx="0" cy="-32" rx="4.2" ry="3.4" fill="url(#bloom)"/>
+      <ellipse cx="0" cy="-38" rx="3.2" ry="2.8" fill="url(#bloom)"/>
+      <ellipse cx="0" cy="-43" rx="2.1" ry="2.1" fill="#ddc7ef"/>
+    </g>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="400" height="640" fill="url(#sky)"/>
+
+  <!-- Clouds -->
+  <g filter="url(#soft)" opacity="0.85">
+    <ellipse cx="70" cy="150" rx="86" ry="30" fill="#e9a6c0" opacity="0.75"/>
+    <ellipse cx="130" cy="196" rx="70" ry="20" fill="#f0b9c6" opacity="0.6"/>
+    <ellipse cx="40" cy="250" rx="60" ry="18" fill="#f3c2bd" opacity="0.5"/>
+    <ellipse cx="300" cy="300" rx="96" ry="22" fill="#f6c9a9" opacity="0.45"/>
+    <ellipse cx="210" cy="420" rx="130" ry="26" fill="#f7cfa8" opacity="0.4"/>
+  </g>
+
+  <!-- Sun + glow -->
+  <circle cx="332" cy="606" r="86" fill="url(#sunGlow)"/>
+  <circle cx="332" cy="606" r="19" fill="#fff8e2"/>
+
+  <!-- Far ridge (right, behind the sun) -->
+  <path d="M400 640 L400 556 L352 590 L318 566 L268 604 L240 592 L196 640 Z" fill="url(#ridgeFar)" opacity="0.75"/>
+
+  <!-- Left far ridge -->
+  <path d="M0 640 L0 520 L38 486 L86 534 L120 512 L168 566 L196 640 Z" fill="url(#ridgeFar)" opacity="0.85"/>
+
+  <!-- Main mountain -->
+  <path d="M18 640 L96 560 L150 500 L196 448 L228 480 L262 540 L300 578 L342 616 L368 640 Z" fill="url(#ridgeLit)"/>
+  <!-- Shadowed left flank -->
+  <path d="M18 640 L96 560 L150 500 L196 448 L204 470 L150 546 L98 596 L64 640 Z" fill="#5d4d78" opacity="0.55"/>
+  <!-- Snow / lit crest -->
+  <path d="M196 448 L214 466 L200 476 L186 466 Z" fill="#f6d9c6" opacity="0.8"/>
+
+  <!-- Treeline along the far shore -->
+  <g fill="#2f4636">
+    <path d="M0 640 L8 612 L16 640 Z"/><path d="M14 640 L23 606 L32 640 Z"/><path d="M30 640 L39 614 L48 640 Z"/>
+    <path d="M46 640 L55 604 L64 640 Z"/><path d="M62 640 L71 616 L80 640 Z"/><path d="M78 640 L88 608 L98 640 Z"/>
+    <path d="M96 640 L104 618 L112 640 Z"/><path d="M110 640 L119 610 L128 640 Z"/><path d="M126 640 L135 620 L144 640 Z"/>
+    <path d="M142 640 L150 614 L158 640 Z"/><path d="M158 640 L166 622 L174 640 Z"/><path d="M174 640 L182 616 L190 640 Z"/>
+    <path d="M330 640 L338 620 L346 640 Z"/><path d="M346 640 L355 612 L364 640 Z"/><path d="M362 640 L371 620 L380 640 Z"/>
+    <path d="M378 640 L387 614 L396 640 Z"/>
+  </g>
+  <!-- Grassy bank, left -->
+  <path d="M0 640 L0 596 C 40 604, 92 616, 132 640 Z" fill="url(#bank)" opacity="0.9"/>
+
+  <!-- ============ Water ============ -->
+  <rect y="640" width="400" height="200" fill="url(#water)"/>
+
+  <!-- Mirrored mountain reflection -->
+  <g transform="translate(0,1280) scale(1,-1)" opacity="0.34" filter="url(#ripple)">
+    <path d="M18 640 L96 560 L150 500 L196 448 L228 480 L262 540 L300 578 L342 616 L368 640 Z" fill="url(#ridgeLit)"/>
+    <path d="M0 640 L0 520 L38 486 L86 534 L120 512 L168 566 L196 640 Z" fill="url(#ridgeFar)"/>
+  </g>
+
+  <!-- Sun reflection column -->
+  <ellipse cx="332" cy="700" rx="26" ry="62" fill="url(#glitter)"/>
+  <ellipse cx="332" cy="660" rx="40" ry="12" fill="#fff1cd" opacity="0.5" filter="url(#softer)"/>
+
+  <!-- Ripple streaks -->
+  <g stroke="#fff" stroke-linecap="round" opacity="0.22">
+    <path d="M40 690 H120" stroke-width="1.6"/>
+    <path d="M210 712 H286" stroke-width="1.4"/>
+    <path d="M96 742 H196" stroke-width="1.8"/>
+    <path d="M256 762 H340" stroke-width="1.4"/>
+    <path d="M30 790 H140" stroke-width="1.6"/>
+  </g>
+
+  <!-- ============ Foreground ============ -->
+  <path d="M0 806 C 90 776, 300 786, 400 812 L400 860 L0 860 Z" fill="#7d7a86" opacity="0.55"/>
+  <g fill="#5f5b63">
+    <ellipse cx="86" cy="806" rx="62" ry="22"/>
+    <ellipse cx="178" cy="836" rx="46" ry="18"/>
+    <ellipse cx="300" cy="826" rx="54" ry="20"/>
+    <ellipse cx="24" cy="842" rx="40" ry="16"/>
+  </g>
+  <g fill="#736e78" opacity="0.8">
+    <ellipse cx="72" cy="798" rx="44" ry="14"/>
+    <ellipse cx="292" cy="818" rx="34" ry="11"/>
+  </g>
+
+  <!-- Lupines -->
+  <g>
+    <use href="#lupine" transform="translate(18,850) scale(1.15)"/>
+    <use href="#lupine" transform="translate(44,858) scale(0.95)"/>
+    <use href="#lupine" transform="translate(66,846) scale(1.05)"/>
+    <use href="#lupine" transform="translate(96,860) scale(0.85)"/>
+    <use href="#lupine" transform="translate(330,846) scale(1.2)"/>
+    <use href="#lupine" transform="translate(356,858) scale(1)"/>
+    <use href="#lupine" transform="translate(378,842) scale(1.1)"/>
+    <use href="#lupine" transform="translate(306,860) scale(0.9)"/>
+    <use href="#lupine" transform="translate(232,858) scale(0.8)"/>
+  </g>
+
+  <!-- Bottom vignette so the controls stay legible -->
+  <rect y="700" width="400" height="160" fill="#2a1f3a" opacity="0.12"/>
+</svg>
